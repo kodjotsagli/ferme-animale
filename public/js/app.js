@@ -749,18 +749,18 @@ function renderDashboardIncubationSection(data) {
         </div>
       </div>
       <div class="dash-inc-controls">
-        <select id="dash-inc-species-filter" class="form-control" style="width:auto; font-size:12.5px; padding:6px 12px; font-weight:600;">
+        <select id="dash-inc-species-filter" class="form-control dash-inc-select" style="font-size:12.5px; padding:6px 12px; font-weight:600;">
           <option value="toutes">Toutes les espèces</option>
           ${Object.values(speciesMap).map(sp => `
             <option value="${escapeHtml(sp.id)}" ${sp.id === curSp ? 'selected' : ''}>${sp.icon} ${escapeHtml(sp.name)}</option>
           `).join('')}
         </select>
-        <select id="dash-inc-status-filter" class="form-control" style="width:auto; font-size:12.5px; padding:6px 12px; font-weight:600;">
+        <select id="dash-inc-status-filter" class="form-control dash-inc-select" style="font-size:12.5px; padding:6px 12px; font-weight:600;">
           <option value="en_cours" ${curSt === 'en_cours' ? 'selected' : ''}>En cours d'incubation</option>
           <option value="termine" ${curSt === 'termine' ? 'selected' : ''}>Incubations terminées</option>
           <option value="toutes" ${curSt === 'toutes' ? 'selected' : ''}>Tous les lots</option>
         </select>
-        <button id="btn-dash-new-incubation" class="btn btn-primary btn-sm" style="font-size:12.5px; font-weight:700;">
+        <button id="btn-dash-new-incubation" class="btn btn-primary btn-sm dash-inc-btn-new" style="font-size:12.5px; font-weight:700;">
           ➕ Nouvelle incubation
         </button>
       </div>
@@ -812,16 +812,16 @@ function renderDashboardIncubationSection(data) {
     <!-- Liste des lots sous forme de cartes -->
     ${filtered.length === 0 ? `
       <div class="empty-growth-box" style="margin-top:4px;">
-        <span style="font-size:24px;">🥚</span>
-        <div style="flex:1;">
-          <strong style="color:#0f172a;">Aucun lot d'incubation pour ce filtre</strong>
-          <p style="font-size:12.5px; color:#64748b; margin:2px 0 0;">
+        <span style="font-size:24px; flex-shrink:0;">🥚</span>
+        <div style="flex:1; min-width:0;">
+          <strong style="color:#0f172a; display:block; overflow-wrap:anywhere;">Aucun lot d'incubation pour ce filtre</strong>
+          <p style="font-size:12.5px; color:#64748b; margin:2px 0 0; overflow-wrap:anywhere;">
             ${curSt === 'en_cours'
               ? 'Aucun lot en couvaison actuellement. Cliquez sur « Nouvelle incubation » pour lancer une couvée.'
               : 'Aucun enregistrement d\'incubation trouvé pour cette sélection.'}
           </p>
         </div>
-        <button class="btn btn-primary btn-sm btn-quick-new-inc" style="font-size:12px; white-space:nowrap;">
+        <button class="btn btn-primary btn-sm btn-quick-new-inc" style="font-size:12px;">
           ➕ Nouvelle incubation
         </button>
       </div>

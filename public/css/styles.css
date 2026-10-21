@@ -320,6 +320,9 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* TOPBAR */
@@ -392,6 +395,9 @@ body {
 .page-content {
   padding: 28px;
   flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .page-header {
@@ -1076,6 +1082,10 @@ input:checked + .toggle-slider:before {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .dash-hero-header {
@@ -1085,11 +1095,24 @@ input:checked + .toggle-slider:before {
   flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 20px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+#dash-content-area {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .dash-title-wrap {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  flex: 1 1 200px;
 }
 
 .dash-title-main {
@@ -1441,6 +1464,10 @@ input:checked + .toggle-slider:before {
   gap: 14px;
   color: #475569;
   font-size: 13.5px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* ==========================================================================
@@ -1453,6 +1480,10 @@ input:checked + .toggle-slider:before {
   padding: 22px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   margin-bottom: 24px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .dash-inc-header {
@@ -1462,11 +1493,17 @@ input:checked + .toggle-slider:before {
   flex-wrap: wrap;
   gap: 14px;
   margin-bottom: 18px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .dash-inc-title-box {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  flex: 1 1 220px;
 }
 
 .dash-inc-title {
@@ -1475,13 +1512,16 @@ input:checked + .toggle-slider:before {
   color: #0f172a;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
+  min-width: 0;
 }
 
 .dash-inc-subtitle {
   font-size: 12.5px;
   color: #64748b;
   margin-top: 2px;
+  overflow-wrap: anywhere;
 }
 
 .dash-inc-controls {
@@ -1489,6 +1529,18 @@ input:checked + .toggle-slider:before {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  min-width: 0;
+}
+
+.dash-inc-select {
+  min-width: 130px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.dash-inc-btn-new {
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .dash-inc-kpi-grid {
@@ -1496,6 +1548,10 @@ input:checked + .toggle-slider:before {
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
   margin-bottom: 20px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
@@ -1504,9 +1560,10 @@ input:checked + .toggle-slider:before {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 500px) {
   .dash-inc-kpi-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 10px;
   }
 }
 
@@ -1514,12 +1571,22 @@ input:checked + .toggle-slider:before {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  padding: 16px;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   transition: all 0.15s ease;
+}
+
+.dash-inc-kpi-card > div:first-child {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .dash-inc-kpi-card:hover {
@@ -2083,6 +2150,191 @@ html, body {
   .farm-select {
     max-width: 160px !important;
     font-size: 13px !important;
+  }
+
+  /* ========================================================================
+     SECTION INCUBATION DES ŒUFS — MOBILES & TABLETTES (<= 768px)
+     ======================================================================== */
+  .dash-incubation-section {
+    padding: 14px 12px !important;
+    border-radius: 14px !important;
+    margin-bottom: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .dash-inc-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    margin-bottom: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .dash-inc-title-box {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .dash-inc-title {
+    font-size: 16px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .dash-inc-subtitle {
+    font-size: 12px !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .dash-inc-controls {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+  }
+
+  .dash-inc-select,
+  .dash-inc-controls select {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    font-size: 14px !important;
+    box-sizing: border-box !important;
+  }
+
+  .dash-inc-btn-new,
+  .dash-inc-controls button,
+  .dash-inc-controls .btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    font-size: 14px !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+
+  .dash-inc-kpi-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    margin-bottom: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .dash-inc-kpi-card {
+    padding: 12px 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .dash-inc-kpi-card > div:first-child {
+    flex: 1 !important;
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .dash-inc-kpi-label {
+    font-size: 12px !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .dash-inc-kpi-val {
+    font-size: 20px !important;
+  }
+
+  .dash-inc-kpi-icon {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .empty-growth-box {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 14px !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .empty-growth-box > div {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .empty-growth-box .btn,
+  .empty-growth-box .btn-quick-new-inc {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    justify-content: center !important;
+    margin-top: 6px !important;
+    white-space: normal !important;
+    box-sizing: border-box !important;
+  }
+
+  .dash-inc-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .dash-inc-card {
+    padding: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .dash-inc-actions {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+
+  .dash-inc-actions .btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+/* ==========================================================================
+   ADAPTATION SPÉCIFIQUE TABLETTE (481px à 768px)
+   ========================================================================== */
+@media (min-width: 481px) and (max-width: 768px) {
+  .dash-inc-controls {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .dash-inc-btn-new,
+  .dash-inc-controls button,
+  .dash-inc-controls .btn {
+    grid-column: 1 / -1 !important;
+  }
+
+  .dash-inc-kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
