@@ -2,9 +2,19 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agro-Ferme — Gestion Professionnelle de Ferme Animale</title>
-  <link rel="stylesheet" href="css/styles.css?v=2.3.1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>MaFerme — Gestion Intelligente de Votre Ferme</title>
+  <meta name="description" content="Plateforme complète de gestion intelligente de ferme animale, cheptel, reproductions, incubations et alertes.">
+  <meta name="theme-color" content="#16A34A">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="MaFerme">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-512.png">
+  <link rel="stylesheet" href="css/styles.css?v=2.4.0">
   <!-- Chart.js localisé pour fonctionnement 100% hors-ligne -->
   <script src="vendor/chart.js/chart.umd.js"></script>
 </head>
@@ -16,9 +26,11 @@
   <div id="auth-shell" class="auth-wrapper" style="display:none;">
     <div class="auth-card">
       <div class="auth-logo">
-        <div class="auth-logo-icon">🌾</div>
-        <h2 class="auth-title">AGRO-FERME</h2>
-        <p class="auth-subtitle">Plateforme de Gestion de Ferme Animale</p>
+        <div class="auth-logo-icon">
+          <img src="icon-192.png" alt="MaFerme" style="width:58px; height:58px; border-radius:14px; display:inline-block; box-shadow:0 6px 16px rgba(6,78,59,0.25);">
+        </div>
+        <h2 class="auth-title">MaFerme</h2>
+        <p class="auth-subtitle">Gestion Intelligente de Votre Ferme</p>
       </div>
 
       <div class="auth-tabs">
@@ -74,10 +86,12 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <div class="sidebar-brand-icon">🌾</div>
+        <div class="sidebar-brand-icon">
+          <img src="icon-192.png" alt="MaFerme" style="width:36px; height:36px; border-radius:10px; display:block; box-shadow:0 2px 8px rgba(6,78,59,0.2);">
+        </div>
         <div>
-          <h1>AGRO-FERME</h1>
-          <span>Gestion d'élevage</span>
+          <h1>MaFerme</h1>
+          <span>Gestion Intelligente</span>
         </div>
       </div>
 
@@ -197,6 +211,30 @@
       <main class="page-content" id="page-container">
         <!-- Rendu injecté via app.js -->
       </main>
+
+      <!-- BARRE DE NAVIGATION INFÉRIEURE MOBILE ANDROID (BOTTOM BAR) -->
+      <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Navigation principale mobile">
+        <button type="button" class="bottom-nav-item active" data-view="dashboard" id="bnav-dashboard">
+          <span class="bnav-icon">📊</span>
+          <span class="bnav-label">Tableau</span>
+        </button>
+        <button type="button" class="bottom-nav-item" data-view="animals" id="bnav-animals">
+          <span class="bnav-icon">🐾</span>
+          <span class="bnav-label">Cheptel</span>
+        </button>
+        <button type="button" class="bottom-nav-item" data-view="eggs" id="bnav-eggs">
+          <span class="bnav-icon">🥚</span>
+          <span class="bnav-label">Incubation</span>
+        </button>
+        <button type="button" class="bottom-nav-item" data-view="alerts" id="bnav-alerts">
+          <span class="bnav-icon">🔔</span>
+          <span class="bnav-label">Alertes</span>
+        </button>
+        <button type="button" class="bottom-nav-item" id="bnav-menu">
+          <span class="bnav-icon">☰</span>
+          <span class="bnav-label">Menu</span>
+        </button>
+      </nav>
     </div>
   </div>
 

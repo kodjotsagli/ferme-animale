@@ -188,6 +188,18 @@ function updateActiveNav(view) {
       submenuSettings.style.display = 'none';
     }
   }
+
+  // Synchroniser la barre de navigation inférieure mobile Android
+  document.querySelectorAll('.bottom-nav-item').forEach(b => {
+    const bView = b.getAttribute('data-view');
+    if (bView) {
+      if (bView === currentView) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    }
+  });
 }
 
 function setupEventListeners() {
@@ -206,7 +218,30 @@ function setupEventListeners() {
     });
   });
 
-  // Bouton menu mobile
+  // Navigation inférieure mobile
+  document.querySelectorAll('.bottom-nav-item[data-view]').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const view = item.getAttribute('data-view');
+      if (view) {
+        State.setView(view);
+
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) sidebar.classList.remove('mobile-open');
+      }
+    });
+  });
+
+  const bnavMenu = document.getElementById('bnav-menu');
+  if (bnavMenu) {
+    bnavMenu.addEventListener('click', (e) => {
+      e.preventDefault();
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar) sidebar.classList.toggle('mobile-open');
+    });
+  }
+
+  // Bouton menu mobile topbar
   const mobileBtn = document.getElementById('btn-mobile-menu');
   if (mobileBtn) {
     mobileBtn.addEventListener('click', () => {
