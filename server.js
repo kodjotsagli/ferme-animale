@@ -127,16 +127,18 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log('====================================================');
-  console.log('🌾 Application Agro-Ferme démarrée !');
-  console.log(`📡 URL locale : http://localhost:${PORT}`);
-  if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
-    console.log(`🟢 Supabase connecté : ${process.env.SUPABASE_URL}`);
-  } else {
-    console.log('🟡 Supabase non configuré dans .env — mode de secours local actif');
-  }
-  console.log('====================================================');
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log('====================================================');
+    console.log('🌾 Application Agro-Ferme démarrée !');
+    console.log(`📡 URL locale : http://localhost:${PORT}`);
+    if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
+      console.log(`🟢 Supabase connecté : ${process.env.SUPABASE_URL}`);
+    } else {
+      console.log('🟡 Supabase non configuré dans .env — mode de secours local actif');
+    }
+    console.log('====================================================');
+  });
+}
 
 module.exports = app;
