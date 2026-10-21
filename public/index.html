@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agro-Ferme — Gestion Professionnelle de Ferme Animale</title>
+  <link rel="stylesheet" href="css/styles.css?v=2.3.1">
+  <!-- Chart.js localisé pour fonctionnement 100% hors-ligne -->
+  <script src="vendor/chart.js/chart.umd.js"></script>
+</head>
+<body>
+
+  <!-- ======================================================================
+       1. ÉCRAN D'AUTHENTIFICATION (CONNEXION / INSCRIPTION)
+       ====================================================================== -->
+  <div id="auth-shell" class="auth-wrapper" style="display:none;">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🌾</div>
+        <h2 class="auth-title">AGRO-FERME</h2>
+        <p class="auth-subtitle">Plateforme de Gestion de Ferme Animale</p>
+      </div>
+
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tab-login">Connexion</div>
+        <div class="auth-tab" id="tab-register">Créer un compte</div>
+      </div>
+
+      <!-- FORMULAIRE DE CONNEXION -->
+      <form id="form-login">
+        <div class="form-group">
+          <label class="form-label">Adresse e-mail</label>
+          <input type="email" id="login-email" class="form-control" placeholder="exemple@ferme.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-bottom:18px;">
+          <a href="#" id="link-forgot-password" style="font-size:12.5px; color:var(--primary-700); text-decoration:none; font-weight:600;">Mot de passe oublié ?</a>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">Se connecter</button>
+
+        <div style="margin-top:20px; border-top:1px solid var(--gray-200); padding-top:16px;">
+          <button type="button" id="btn-demo-quick-login" class="btn btn-secondary" style="width:100%; font-size:13px;">
+            ⚡ Découvrir avec la ferme démo pré-remplie
+          </button>
+        </div>
+      </form>
+
+      <!-- FORMULAIRE D'INSCRIPTION -->
+      <form id="form-register" style="display:none;">
+        <div class="form-group">
+          <label class="form-label">Nom complet de l'éleveur / exploitant *</label>
+          <input type="text" id="register-name" class="form-control" placeholder="Michel Dupont" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Adresse e-mail *</label>
+          <input type="email" id="register-email" class="form-control" placeholder="michel@ferme.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mot de passe (6 caractères min.) *</label>
+          <input type="password" id="register-password" class="form-control" placeholder="••••••••" minlength="6" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; padding:12px; margin-top:8px;">Créer mon compte fermier</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       2. APPLICATION SHELL (MENU LATÉRAL + CONTENU)
+       ====================================================================== -->
+  <div id="app-shell" id="app-container" style="display:none; min-height:100vh;">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">🌾</div>
+        <div>
+          <h1>AGRO-FERME</h1>
+          <span>Gestion d'élevage</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Général</div>
+        <a class="nav-item active" data-view="dashboard">
+          <span class="nav-icon">📊</span>
+          <span>Tableau de bord</span>
+        </a>
+        <a class="nav-item" data-view="alerts" id="nav-item-alerts">
+          <span class="nav-icon">🔔</span>
+          <span>Alertes & Rappels</span>
+          <span id="sidebar-alert-badge" class="badge badge-red" style="display:none; margin-left:auto; font-size:11px;">0</span>
+        </a>
+        <a class="nav-item" data-view="species">
+          <span class="nav-icon">🐾</span>
+          <span>Mes animaux</span>
+        </a>
+        <a class="nav-item" data-view="animals">
+          <span class="nav-icon">📋</span>
+          <span>Cheptel</span>
+        </a>
+        <a class="nav-item" data-view="movements">
+          <span class="nav-icon">⚡</span>
+          <span>Mouvements</span>
+        </a>
+
+        <div class="nav-section-title">Modules Avancés</div>
+        <a class="nav-item" data-view="reproduction">
+          <span class="nav-icon">🐣</span>
+          <span>Reproduction & Gestation</span>
+        </a>
+        <a class="nav-item" data-view="eggs">
+          <span class="nav-icon">🥚</span>
+          <span>Ponte & Incubation</span>
+        </a>
+        <a class="nav-item" data-view="health">
+          <span class="nav-icon">🩺</span>
+          <span>Santé & Vétérinaire</span>
+        </a>
+        <a class="nav-item" data-view="feed">
+          <span class="nav-icon">🌾</span>
+          <span>Alimentation & Stocks</span>
+        </a>
+        <a class="nav-item" data-view="buildings">
+          <span class="nav-icon">🛖</span>
+          <span>Bâtiments & Entretien</span>
+        </a>
+        <a class="nav-item" data-view="finance">
+          <span class="nav-icon">💰</span>
+          <span>Finances & Trésorerie</span>
+        </a>
+
+        <div class="nav-section-title">Registres & Paramètres</div>
+        <a class="nav-item" data-view="history">
+          <span class="nav-icon">📜</span>
+          <span>Historique & Audit</span>
+        </a>
+        <div class="nav-group" id="nav-group-settings">
+          <a class="nav-item nav-item-parent" data-view="settings" id="nav-item-settings">
+            <span class="nav-icon">⚙️</span>
+            <span>Paramètres</span>
+            <span class="nav-arrow" id="nav-arrow-settings" style="margin-left:auto; font-size:10px; transition:transform 0.2s ease;">▾</span>
+          </a>
+          <div class="nav-submenu" id="submenu-settings">
+            <a class="nav-item nav-subitem" data-view="farm" id="nav-subitem-farm">
+              <span class="nav-subicon">🏡</span>
+              <span>Ma ferme</span>
+            </a>
+            <a class="nav-item nav-subitem" data-view="settings" id="nav-subitem-settings">
+              <span class="nav-subicon">🏷️</span>
+              <span>Catégories & Config</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar" id="sidebar-user-avatar">F</div>
+          <div class="user-details">
+            <div class="user-name" id="sidebar-user-name">Fermier</div>
+            <div class="user-email" id="sidebar-user-email">email@ferme.com</div>
+          </div>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Se déconnecter">🚪</button>
+      </div>
+    </aside>
+
+    <!-- WRAPPER PRINCIPAL -->
+    <div class="main-wrapper">
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="btn-mobile-menu">☰</button>
+          <div class="farm-selector-wrapper">
+            <select id="header-farm-select" class="farm-select">
+              <option>Chargement de votre ferme...</option>
+            </select>
+            <div class="farm-meta-badge" id="header-farm-meta"></div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <!-- Indicateur technique masqué pour les utilisateurs finaux -->
+          <button id="btn-supabase-status" style="display:none !important;" aria-hidden="true">
+            <span id="supabase-status-dot"></span>
+            <span id="supabase-status-label"></span>
+          </button>
+          <button class="btn btn-secondary btn-sm" id="btn-notifications-toggle" style="position:relative; padding:6px 14px;" title="Alertes et notifications">
+            🔔 Alertes <span id="header-alert-badge" class="badge badge-red" style="display:none; margin-left:4px; font-size:11px;">0</span>
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="State.setView('movements')">⚡ Nouveau Mouvement</button>
+        </div>
+      </header>
+
+      <!-- CONTENEUR DES PAGES DYNAMIQUES -->
+      <main class="page-content" id="page-container">
+        <!-- Rendu injecté via app.js -->
+      </main>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       3. MODALES DE GESTION
+       ====================================================================== -->
+
+  <!-- MODALE 1 : CRÉATION D'UNE FERME (ONBOARDING & MULTI-FERME) -->
+  <div class="modal-backdrop" id="modal-create-farm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">🏡 Créer une Exploitation / Ferme</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-create-farm">
+        <div class="modal-body">
+          <p style="font-size:13.5px; color:var(--gray-600); margin-bottom:18px;">
+            Renseignez les détails de votre ferme pour initialiser vos fiches de gestion et vos lots.
+          </p>
+          <div class="form-group">
+            <label class="form-label">Nom de la ferme *</label>
+            <input type="text" id="new-farm-name" class="form-control" placeholder="Ex: Ferme Avicole du Val Vert" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nom du propriétaire / exploitant *</label>
+            <input type="text" id="new-farm-owner" class="form-control" placeholder="Ex: Jean Paul Kouamé" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Pays *</label>
+              <input type="text" id="new-farm-country" class="form-control" placeholder="Ex: Côte d'Ivoire, France, Sénégal..." required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Localité / Ville *</label>
+              <input type="text" id="new-farm-locality" class="form-control" placeholder="Ex: Yamoussoukro" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Type d'exploitation *</label>
+              <input type="text" id="new-farm-type" class="form-control" placeholder="Ex: Élevage traditionnel, Aviculture..." required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Devise utilisée *</label>
+              <select id="new-farm-currency" class="form-control">
+                <option value="FCFA">FCFA (Franc CFA)</option>
+                <option value="EUR">EUR (€ Euro)</option>
+                <option value="USD">USD ($ Dollar)</option>
+                <option value="CAD">CAD ($ Dollar canadien)</option>
+                <option value="MAD">MAD (Dirham marocain)</option>
+                <option value="GNF">GNF (Franc guinéen)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date de démarrage de l'activité *</label>
+            <input type="date" id="new-farm-date" class="form-control" required value="2026-01-01">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Valider et créer la ferme</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE : CONFIRMATION SUPPRESSION EXPLOITATION -->
+  <div class="modal-backdrop" id="modal-delete-farm">
+    <div class="modal-content" style="max-width: 520px;">
+      <div class="modal-header" style="background:#fef2f2; border-bottom:1px solid #fee2e2;">
+        <h3 class="modal-title" style="color:#991b1b; display:flex; align-items:center; gap:8px;">
+          <span>🗑️</span>
+          <span>Supprimer cette exploitation ?</span>
+        </h3>
+        <button class="btn-close-modal" id="btn-close-delete-farm-modal">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 20px 24px;">
+        <div style="background:#fff1f2; border-left:4px solid #e11d48; border-radius:4px; padding:12px 16px; margin-bottom:16px;">
+          <div style="font-weight:700; color:#9f1239; font-size:13.5px; margin-bottom:4px;">
+            ⚠️ Avertissement d'irréversibilité
+          </div>
+          <p style="font-size:13px; color:#881337; margin:0; line-height:1.5;">
+            Êtes-vous sûr de vouloir supprimer cette exploitation ? Cette action peut entraîner la suppression de ses animaux, lots, mouvements, revenus, dépenses et autres données associées. Cette opération est irréversible si aucune sauvegarde n'est disponible.
+          </p>
+        </div>
+
+        <div style="background:var(--gray-50); border:1px solid var(--gray-200); border-radius:var(--radius-md); padding:14px 18px; margin-bottom:16px;">
+          <div style="font-size:11.5px; font-weight:600; color:var(--gray-500); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">
+            Nom de l'exploitation concernée :
+          </div>
+          <div style="font-size:16px; font-weight:700; color:var(--gray-900);" id="delete-farm-target-name">
+            Nom de la ferme
+          </div>
+        </div>
+
+        <!-- ZONE D'AVERTISSEMENT SPÉCIFIQUE (SI FERME ACTIVE OU UNIQUE FERME) -->
+        <div id="delete-farm-active-warning" style="display:none; margin-bottom:16px;"></div>
+
+        <!-- CONFIRMATION RENFORCÉE (SI FERME UNIQUE OU ACTIVE) -->
+        <div id="delete-farm-confirm-input-group" style="display:none; margin-bottom:16px;">
+          <label style="display:flex; align-items:flex-start; gap:10px; font-size:13px; color:#991b1b; cursor:pointer;">
+            <input type="checkbox" id="delete-farm-checkbox-confirm" style="margin-top:2px;">
+            <span id="delete-farm-checkbox-label">Je confirme avoir pris connaissance des conséquences et valide la suppression définitive.</span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer" style="background:var(--gray-50); border-top:1px solid var(--gray-200); display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" class="btn btn-secondary btn-close-modal" id="btn-cancel-delete-farm">Annuler</button>
+        <button type="button" class="btn btn-primary" id="btn-confirm-delete-farm" style="background:#dc2626; border-color:#dc2626; display:inline-flex; align-items:center; gap:6px;">
+          <span>🗑️</span>
+          <span id="btn-confirm-delete-farm-text">Confirmer la suppression</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE 2 : AJOUT ESPÈCE PERSONNALISÉE -->
+  <div class="modal-backdrop" id="modal-custom-species">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">🐾 Ajouter une Espèce Personnalisée</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-custom-species">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group" style="flex:2;">
+              <label class="form-label">Nom de l'espèce *</label>
+              <input type="text" id="custom-sp-name" class="form-control" placeholder="Ex: Cailles, Oies, Escargots..." required>
+            </div>
+            <div class="form-group" style="flex:1;">
+              <label class="form-label">Icône / Emoji</label>
+              <input type="text" id="custom-sp-icon" class="form-control" placeholder="Ex: 🪶, 🐌, 🐝" value="🐾" maxlength="4">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description / Destination</label>
+            <textarea id="custom-sp-desc" class="form-control" rows="2" placeholder="Ex: Élevage de ponte et de chair..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Catégories initiales (séparées par une virgule)</label>
+            <input type="text" id="custom-sp-cats" class="form-control" placeholder="Ex: Femelles, Mâles, Jeunes">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Ajouter et activer l'espèce</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE 3 : ENREGISTRER ANIMAL OU LOT (CHEPTEL) -->
+  <div class="modal-backdrop" id="modal-animal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">📋 Enregistrer un Animal ou un Lot</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-animal">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Identifiant unique / Code</label>
+              <input type="text" id="animal-code-input" class="form-control" placeholder="Laissez vide pour auto-générer">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mode d'enregistrement *</label>
+              <select id="animal-type-select" class="form-control">
+                <option value="lot">Lot / Groupe d'animaux</option>
+                <option value="individuel">Animal individuel (1 tête)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Espèce animale *</label>
+              <select id="animal-species-select" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catégorie *</label>
+              <select id="animal-category-select" class="form-control" required></select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Race ou variété</label>
+              <input type="text" id="animal-breed-input" class="form-control" placeholder="Ex: Barbarie, Goliath, Saanen...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sexe *</label>
+              <select id="animal-gender-select" class="form-control">
+                <option value="MIXTE">Mixte / Non sexé (Poussins, canetons...)</option>
+                <option value="F">Femelle (F)</option>
+                <option value="M">Mâle (M)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Effectif initial (Quantité) *</label>
+              <input type="number" id="animal-quantity-input" class="form-control" min="1" value="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Poids moyen / individuel (kg)</label>
+              <input type="number" id="animal-weight-input" class="form-control" step="0.01" placeholder="Ex: 2.4">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date de naissance ou âge estimé</label>
+              <input type="date" id="animal-birth-input" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date d'achat (si acheté)</label>
+              <input type="date" id="animal-purchase-date-input" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Prix d'achat total</label>
+              <input type="number" id="animal-price-input" class="form-control" step="0.1" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lot ou bâtiment d'accueil</label>
+              <select id="animal-lot-select" class="form-control"></select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Emplacement précis dans la ferme</label>
+            <input type="text" id="animal-location-input" class="form-control" placeholder="Ex: Enclos 3, Cage B4, Parc Nord">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Observations</label>
+            <textarea id="animal-obs-input" class="form-control" rows="2" placeholder="Santé, provenance, vaccination..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer la fiche</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE 4 : ENREGISTRER UN MOUVEMENT (VALIDATION ATOMIQUE) -->
+  <div class="modal-backdrop" id="modal-movement">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">⚡ Enregistrer une Opération / Mouvement</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-movement">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Type d'opération *</label>
+              <select id="mov-type-select" class="form-control" style="font-weight:700;">
+                <option value="naissance">🐣 Naissance (+ Entrée cheptel)</option>
+                <option value="achat">🛒 Achat (+ Entrée cheptel)</option>
+                <option value="vente">💰 Vente (- Sortie cheptel)</option>
+                <option value="deces">✝️ Décès (- Sortie cheptel)</option>
+                <option value="perte">⚠️ Perte ou disparition (- Sortie)</option>
+                <option value="transfert_lot">🔀 Transfert entre lots (Effectif neutre)</option>
+                <option value="changement_categorie">🔄 Changement de catégorie (Effectif neutre)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date de l'opération *</label>
+              <input type="date" id="mov-date-input" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- GROUPE SORTIE / TRANSFERT / CATÉGORIE : SÉLECTION DE LA FICHE SOURCE -->
+          <div class="form-group" id="mov-group-animal">
+            <label class="form-label">Animal ou Lot source concerné *</label>
+            <select id="mov-animal-select" class="form-control"></select>
+            <div id="mov-stock-preview" style="font-size:12.5px; margin-top:6px; min-height:18px;"></div>
+          </div>
+
+          <!-- GROUPE ENTRÉE DIRECTE : ESPÈCE & CATÉGORIE -->
+          <div id="mov-group-entry-species" style="display:none;">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Espèce *</label>
+                <select id="mov-entry-species" class="form-control"></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Catégorie *</label>
+                <select id="mov-entry-cat" class="form-control"></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Quantité d'animaux concernés *</label>
+              <input type="number" id="mov-qty-input" class="form-control" min="1" value="1" required style="font-size:16px; font-weight:700;">
+            </div>
+            <!-- LOT DESTINATION POUR TRANSFERT OU ENTRÉE -->
+            <div class="form-group" id="mov-group-target-lot" style="display:none;">
+              <label class="form-label">Lot de destination *</label>
+              <select id="mov-target-lot-select" class="form-control"></select>
+            </div>
+            <!-- NOUVELLE CATÉGORIE CIBLE -->
+            <div class="form-group" id="mov-group-target-cat" style="display:none;">
+              <label class="form-label">Nouvelle catégorie cible *</label>
+              <select id="mov-target-cat-select" class="form-control"></select>
+            </div>
+          </div>
+
+          <!-- PRIX POUR VENTE OU ACHAT -->
+          <div class="form-group" id="mov-group-price" style="display:none;">
+            <label class="form-label">Montant financier total</label>
+            <input type="number" id="mov-price-input" class="form-control" step="0.1" placeholder="Montant">
+          </div>
+
+          <!-- MOTIF POUR DÉCÈS OU PERTE -->
+          <div class="form-group" id="mov-group-reason" style="display:none;">
+            <label class="form-label">Cause ou motif du décès / perte</label>
+            <input type="text" id="mov-reason-input" class="form-control" placeholder="Ex: Prédation, maladie, coup de chaud...">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Observations & Remarques</label>
+            <textarea id="mov-obs-input" class="form-control" rows="2" placeholder="Précisions sur l'opération..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Valider le mouvement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE 5 : DÉTAIL ANIMAL ET HISTORIQUE -->
+  <div class="modal-backdrop" id="modal-animal-detail">
+    <div class="modal-content" style="max-width:700px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Fiche Cheptel — <span id="detail-code"></span></h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:14px; background:var(--gray-50); padding:16px; border-radius:var(--radius-md); margin-bottom:20px;">
+          <div><span style="font-size:12px; color:var(--gray-500);">Espèce</span><br><strong id="detail-species"></strong></div>
+          <div><span style="font-size:12px; color:var(--gray-500);">Catégorie</span><br><strong id="detail-category"></strong></div>
+          <div><span style="font-size:12px; color:var(--gray-500);">Race</span><br><strong id="detail-breed"></strong></div>
+          <div><span style="font-size:12px; color:var(--gray-500);">Sexe</span><br><strong id="detail-gender"></strong></div>
+          <div><span style="font-size:12px; color:var(--gray-500);">Effectif</span><br><strong id="detail-qty" style="color:var(--primary-800); font-size:16px;"></strong></div>
+          <div><span style="font-size:12px; color:var(--gray-500);">Lot actuel</span><br><strong id="detail-lot"></strong></div>
+          <div><span style="font-size:12px; color:var(--gray-500);">Poids</span><br><strong id="detail-weight"></strong></div>
+          <div><span style="font-size:12px; color:var(--gray-500);">Observations</span><br><span id="detail-obs" style="font-size:13px;"></span></div>
+        </div>
+
+        <h4 style="font-size:15px; font-weight:700; margin-bottom:10px;">Traçabilité de cette fiche</h4>
+        <div class="table-responsive">
+          <table class="table" id="table-animal-movements">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Opération</th>
+                <th style="text-align:right;">Quantité</th>
+                <th>Observations</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE 6 : CRÉER UN LOT -->
+  <div class="modal-backdrop" id="modal-lot">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">🛖 Créer un Lot ou Bâtiment</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-lot">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Nom du lot ou bâtiment *</label>
+            <input type="text" id="lot-name-input" class="form-control" placeholder="Ex: Poussinière A, Enclos Chèvres Sud..." required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Espèce attribuée</label>
+              <select id="lot-species-select" class="form-control"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Capacité maximale (têtes)</label>
+              <input type="number" id="lot-capacity-input" class="form-control" placeholder="Ex: 150" min="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Emplacement dans la ferme</label>
+            <input type="text" id="lot-location-input" class="form-control" placeholder="Ex: Bâtiment 2, Parc Ouest">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes et équipements</label>
+            <textarea id="lot-notes-input" class="form-control" rows="2" placeholder="Abreuvoirs automatiques, litière paille..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Créer le lot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE : MODIFIER UN BÂTIMENT / INSTALLATION -->
+  <div class="modal-backdrop" id="modal-edit-building">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">✏️ Modifier l'Installation / Bâtiment</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-edit-building">
+        <input type="hidden" id="edit-building-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Nom du bâtiment ou de l'installation *</label>
+            <input type="text" id="edit-building-name" class="form-control" placeholder="Ex: Poulailler Ponte 1, Canardière Sud..." required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Type d'installation *</label>
+              <select id="edit-building-type" class="form-control" required>
+                <option value="poulailler">🐔 Poulailler</option>
+                <option value="canardiere">🦆 Canardière</option>
+                <option value="chevrerie">🐐 Chèvrerie</option>
+                <option value="bergerie">🐑 Bergerie</option>
+                <option value="etable">🐄 Étable</option>
+                <option value="enclos">🌿 Enclos extérieur / Parc</option>
+                <option value="batiment_mixte">🛖 Bâtiment mixte</option>
+                <option value="autre">🏠 Autre installation</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Statut opérationnel *</label>
+              <select id="edit-building-status" class="form-control" required>
+                <option value="actif">🟢 Actif (En service)</option>
+                <option value="inactif">⚪ Inactif (En arrêt / Vide sanitaire)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Espèces autorisées</label>
+              <select id="edit-building-species" class="form-control">
+                <option value="">🛖 Mixte (Toutes espèces)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Capacité maximale (têtes)</label>
+              <input type="number" id="edit-building-capacity" class="form-control" placeholder="Ex: 150" min="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Emplacement dans la ferme</label>
+            <input type="text" id="edit-building-location" class="form-control" placeholder="Ex: Bâtiment Sud, Parc Ouest">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes et équipements</label>
+            <textarea id="edit-building-notes" class="form-control" rows="2" placeholder="Abreuvoirs automatiques, litière paille, ventilation..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE : MODIFIER UN LOT D'ANIMAUX -->
+  <div class="modal-backdrop" id="modal-edit-animal-lot">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">✏️ Modifier le Lot d'Animaux</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-edit-animal-lot">
+        <input type="hidden" id="edit-animal-lot-id">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nom ou code du lot *</label>
+              <input type="text" id="edit-animal-lot-code" class="form-control" placeholder="Ex: LOT-POUS-2026-001" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Statut du lot *</label>
+              <select id="edit-animal-lot-status" class="form-control" required>
+                <option value="actif">🟢 Actif (En élevage)</option>
+                <option value="traite">✅ Traité / Classifié</option>
+                <option value="vendu">💰 Vendu</option>
+                <option value="mort">🪦 Mort</option>
+                <option value="isole">⚠️ Isolé / Quarantaine</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Espèce *</label>
+              <select id="edit-animal-lot-species" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catégorie d'animaux *</label>
+              <select id="edit-animal-lot-category" class="form-control" required></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date de naissance ou d'arrivée</label>
+              <input type="date" id="edit-animal-lot-birth-date" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Installation / Bâtiment d'accueil</label>
+              <select id="edit-animal-lot-building-select" class="form-control">
+                <option value="">-- Aucun bâtiment assigné --</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Quantité initiale (têtes)</label>
+              <input type="number" id="edit-animal-lot-initial-qty" class="form-control" min="0" placeholder="Ex: 50" required>
+              <small style="color:var(--gray-500); font-size:11.5px;">Effectif au démarrage du lot (historique).</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Quantité actuelle vivante (têtes) *</label>
+              <input type="number" id="edit-animal-lot-current-qty" class="form-control" min="0" placeholder="Ex: 48" required>
+              <small style="color:var(--gray-500); font-size:11.5px;">Toute différence génère un mouvement traçable.</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Motif de l'ajustement / Notes & Observations</label>
+            <textarea id="edit-animal-lot-notes" class="form-control" rows="2" placeholder="Précisez la raison en cas de modification de l'effectif actuel (recomptage, sortie, etc.)..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE 7 : MOT DE PASSE OUBLIÉ -->
+  <div class="modal-backdrop" id="modal-forgot-password">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">🔑 Réinitialiser votre mot de passe</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="forgot-step-1">
+          <p style="font-size:13.5px; color:var(--gray-600); margin-bottom:16px;">
+            Saisissez votre e-mail pour recevoir un code de vérification à 6 chiffres.
+          </p>
+          <form id="form-forgot-password">
+            <div class="form-group">
+              <label class="form-label">Adresse e-mail</label>
+              <input type="email" id="forgot-email" class="form-control" required placeholder="exemple@ferme.com">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;">Générer le code</button>
+          </form>
+        </div>
+
+        <div id="forgot-step-2" style="display:none;">
+          <p style="font-size:13.5px; color:var(--gray-600); margin-bottom:16px;">
+            Entrez le code reçu et choisissez votre nouveau mot de passe.
+          </p>
+          <form id="form-reset-password">
+            <input type="hidden" id="reset-email-input">
+            <div class="form-group">
+              <label class="form-label">Code de vérification (6 chiffres)</label>
+              <input type="text" id="reset-code-input" class="form-control" required style="font-size:18px; font-weight:700; letter-spacing:2px; text-align:center;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nouveau mot de passe (6 car. min.)</label>
+              <input type="password" id="reset-new-password" class="form-control" minlength="6" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;">Valider le nouveau mot de passe</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MODALES AVANCÉES V2
+       ====================================================================== -->
+
+  <!-- MODALE V2 : REPRODUCTION (SAILLIE / INSÉMINATION) -->
+  <div class="modal-backdrop" id="modal-reproduction">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">🐣 Enregistrer une Saillie ou Insémination</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-reproduction">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Espèce concernée *</label>
+              <select id="repro-species-select" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Type d'accouplement *</label>
+              <select id="repro-type-select" class="form-control">
+                <option value="saillie">Saillie naturelle</option>
+                <option value="insemination">Insémination artificielle</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Femelle reproductrice</label>
+              <select id="repro-female-select" class="form-control"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mâle reproducteur (de la ferme)</label>
+              <select id="repro-male-select" class="form-control"></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ou nom du reproducteur / semence externe</label>
+            <input type="text" id="repro-male-name" class="form-control" placeholder="Ex: Bélier extérieur, Semence taureau...">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date de la saillie / insémination *</label>
+              <input type="date" id="repro-date-input" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Durée gestation estimée (jours)</label>
+              <input type="number" id="repro-days-input" class="form-control" placeholder="Ex: 150 (chèvres), 283 (bovins)...">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lot ou bâtiment prévu pour la mise bas</label>
+            <select id="repro-target-lot" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes et observations</label>
+            <textarea id="repro-notes-input" class="form-control" rows="2" placeholder="Chaleurs, comportement, antécédents..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer la reproduction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : CONFIRMER LA MISE BAS -->
+  <div class="modal-backdrop" id="modal-confirm-birth">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">🍼 Confirmer la Mise Bas</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-confirm-birth">
+        <input type="hidden" id="birth-repro-id">
+        <div class="modal-body">
+          <p style="font-size:13.5px; color:var(--gray-600); margin-bottom:16px;">
+            Les nouveau-nés vivants seront <strong>automatiquement ajoutés au cheptel</strong> et au stock de la ferme sans double comptage.
+          </p>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date réelle de mise bas *</label>
+              <input type="date" id="birth-date-input" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nombre total de petits VIVANTS *</label>
+              <input type="number" id="birth-live-qty" class="form-control" min="0" value="1" required style="font-size:16px; font-weight:700;">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nombre de mâles</label>
+              <input type="number" id="birth-males" class="form-control" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nombre de femelles</label>
+              <input type="number" id="birth-females" class="form-control" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mort-nés (pertes)</label>
+              <input type="number" id="birth-stillborn" class="form-control" min="0" value="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lot ou bâtiment d'accueil</label>
+            <select id="birth-target-lot" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Race des petits</label>
+            <input type="text" id="birth-breed" class="form-control" placeholder="Laissez vide pour hériter de la mère">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Observations sanitaires</label>
+            <textarea id="birth-obs" class="form-control" rows="2" placeholder="Vigueur des petits, colostrum, état de la mère..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Valider la naissance et intégrer au cheptel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : COLLECTE D'ŒUFS -->
+  <div class="modal-backdrop" id="modal-egg-collection">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">🥚 Enregistrer une Collecte d'Œufs</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-egg-collection">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date de ponte / ramassage *</label>
+              <input type="date" id="egg-date-input" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Espèce pondeuse *</label>
+              <select id="egg-species-select" class="form-control" required></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lot ou poulailler d'origine</label>
+            <select id="egg-lot-select" class="form-control"></select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nombre d'œufs ramassés (Total) *</label>
+              <input type="number" id="egg-laid-input" class="form-control" min="0" value="30" required style="font-size:16px; font-weight:700;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Œufs cassés ou souillés</label>
+              <input type="number" id="egg-broken-input" class="form-control" min="0" value="0">
+            </div>
+          </div>
+          <div style="background:var(--gray-50); padding:12px; border-radius:var(--radius-md); margin-bottom:14px;">
+            <div style="font-size:12px; font-weight:700; color:var(--gray-700); margin-bottom:8px;">Destination des œufs propres :</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">Vendus</label>
+                <input type="number" id="egg-sold-input" class="form-control" min="0" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">Mis en incubation</label>
+                <input type="number" id="egg-incubated-input" class="form-control" min="0" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">Autoconsommés</label>
+                <input type="number" id="egg-consumed-input" class="form-control" min="0" value="0">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes & Calibre</label>
+            <input type="text" id="egg-notes-input" class="form-control" placeholder="Ex: Gros calibre, œufs bruns...">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer la ponte</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : LOT D'INCUBATION (CRÉATION & MODIFICATION) -->
+  <div class="modal-backdrop" id="modal-incubation">
+    <div class="modal-content" style="max-width:540px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-incubation-title">🐣 Lancer un Lot d'Incubation</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-incubation">
+        <input type="hidden" id="inc-id">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Code / Nom du lot *</label>
+              <input type="text" id="inc-code-input" class="form-control" placeholder="Ex: INC-POU-04" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Espèce animale *</label>
+              <select id="inc-species-select" class="form-control" required></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Méthode d'incubation</label>
+              <select id="inc-method-select" class="form-control">
+                <option value="artificielle">⚡ Couveuse artificielle électrique</option>
+                <option value="naturelle">🪺 Couvaison naturelle sous femelle</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nombre d'œufs mis en incubation *</label>
+              <input type="number" id="inc-eggs-count" class="form-control" min="1" value="20" required style="font-size:16px; font-weight:700;">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Couveuse ou emplacement utilisé (optionnel)</label>
+            <input type="text" id="inc-incubator-type" class="form-control" placeholder="Ex: Couveuse R-Com 50, Salle A, Nid Cane 1...">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date de mise en incubation *</label>
+              <input type="date" id="inc-start-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Durée d'incubation (jours) *</label>
+              <input type="number" id="inc-duration-days" class="form-control" min="1" max="100" required placeholder="Ex: 21 (poule), 28 (canard)...">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date d'éclosion prévue (calculée automatiquement)</label>
+            <input type="date" id="inc-expected-hatch-date" class="form-control" readonly style="background:#f1f5f9; font-weight:700; color:#0f172a; cursor:default;">
+            <small style="color:#64748b; font-size:11.5px; display:block; margin-top:3px;">
+              Date d'éclosion = Date de mise en incubation + Durée prévue (recalcul immédiat).
+            </small>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Poussinière ou lot d'accueil après éclosion (optionnel)</label>
+            <select id="inc-target-lot" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Observations & réglages (température, humidité...)</label>
+            <textarea id="inc-notes" class="form-control" rows="2" placeholder="Température 37.7°C, humidité 55%, retournement automatique..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit-incubation">Enregistrer le lot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : ENREGISTRER / VALIDER ÉCLOSION -->
+  <div class="modal-backdrop" id="modal-validate-hatch">
+    <div class="modal-content" style="max-width:540px;">
+      <div class="modal-header">
+        <h3 class="modal-title">🐣 Enregistrer l'Éclosion</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-validate-hatch">
+        <input type="hidden" id="hatch-inc-id">
+        <div class="modal-body">
+          <div id="hatch-lot-summary-box" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; margin-bottom:16px;">
+            <div style="font-size:13px; font-weight:700; color:#0f172a;" id="hatch-lot-info-title">Lot d'incubation</div>
+            <div style="font-size:12px; color:#64748b; margin-top:2px;" id="hatch-lot-info-sub">Total œufs incubés : <strong id="hatch-total-eggs-display">0</strong></div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date réelle d'éclosion *</label>
+              <input type="date" id="hatch-date-input" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nombre total d'œufs éclos *</label>
+              <input type="number" id="hatch-hatched-count" class="form-control" min="0" required style="font-size:16px; font-weight:700;">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nouveau-nés VIVANTS *</label>
+              <input type="number" id="hatch-live-count" class="form-control" min="0" required style="font-size:15px; font-weight:700; color:#16a34a;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nouveau-nés morts / non viables</label>
+              <input type="number" id="hatch-dead-count" class="form-control" min="0" value="0">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Œufs non éclos</label>
+              <input type="number" id="hatch-unhatched-count" class="form-control" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Œufs clairs ou éliminés</label>
+              <input type="number" id="hatch-rejected-count" class="form-control" min="0" value="0">
+            </div>
+          </div>
+
+          <!-- OPTION CASE À COCHER : CRÉER UN LOT DE NOUVEAU-NÉS DANS LE CHEPTEL -->
+          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px 14px; margin:14px 0;">
+            <label style="display:flex; align-items:flex-start; gap:10px; font-weight:600; color:#166534; margin:0; cursor:pointer;">
+              <input type="checkbox" id="hatch-create-animal-lot" checked style="width:18px; height:18px; margin-top:2px; accent-color:#16a34a;">
+              <div>
+                <span>Créer un lot de nouveau-nés dans le cheptel</span>
+                <small style="display:block; color:#15803d; font-weight:400; margin-top:2px;">
+                  Ajoute automatiquement les nouveau-nés vivants au cheptel avec alerte de classification programmée (Poussins : 8 sem., Canetons : 12 sem.).
+                </small>
+              </div>
+            </label>
+          </div>
+
+          <div class="form-group" id="hatch-target-lot-group">
+            <label class="form-label">Poussinière ou lot d'accueil</label>
+            <select id="hatch-target-lot" class="form-control"></select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Observations sur l'éclosion</label>
+            <textarea id="hatch-obs" class="form-control" rows="2" placeholder="Vigueur des nouveau-nés, séchage, qualité du duvet..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Valider les résultats</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : DÉTAILS D'UN LOT D'INCUBATION -->
+  <div class="modal-backdrop" id="modal-incubation-details">
+    <div class="modal-content" style="max-width:560px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="inc-details-title">🥚 Détails du Lot d'Incubation</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body" id="inc-details-body">
+        <!-- Rendu dynamique -->
+      </div>
+      <div class="modal-footer" id="inc-details-footer">
+        <button type="button" class="btn btn-secondary btn-close-modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : INTERVENTION SANITAIRE / VÉTÉRINAIRE -->
+  <div class="modal-backdrop" id="modal-health">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">🩺 Enregistrer un Soin Vétérinaire / Vaccin</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-health">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date de l'intervention *</label>
+              <input type="date" id="health-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Type d'intervention *</label>
+              <select id="health-type" class="form-control">
+                <option value="vaccination">Vaccination</option>
+                <option value="vermifugation">Vermifugation</option>
+                <option value="traitement">Traitement curatif</option>
+                <option value="consultation">Consultation vétérinaire</option>
+                <option value="examen">Examen / Autopsie</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Espèce concernée *</label>
+              <select id="health-species-select" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Animal individuel (optionnel)</label>
+              <select id="health-animal-select" class="form-control"></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ou lot entier traité</label>
+            <select id="health-lot-select" class="form-control"></select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Maladie observée / Diagnostic *</label>
+              <input type="text" id="health-disease" class="form-control" placeholder="Ex: Coccidiose, Newcastle, Parasitisme..." required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Médicament / Produit administré *</label>
+              <input type="text" id="health-treatment" class="form-control" placeholder="Ex: Panacur, Baytril, Nobilis ND..." required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Posologie / Dose</label>
+              <input type="text" id="health-dosage" class="form-control" placeholder="Ex: 5 ml/L d'eau pendant 3j">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Vétérinaire / Soignant</label>
+              <input type="text" id="health-vet" class="form-control" placeholder="Ex: Dr. Lambert">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Coût des soins & produits</label>
+              <input type="number" id="health-cost" class="form-control" step="0.1" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date du prochain soin / rappel</label>
+              <input type="date" id="health-next-date" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Observations et délai d'attente</label>
+            <textarea id="health-notes" class="form-control" rows="2" placeholder="Délai d'attente lait/viande, amélioration..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer l'intervention</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : CRÉER / ÉDITER UN ALIMENT -->
+  <div class="modal-backdrop" id="modal-feed">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">🌾 Fiche Aliment & Stock</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-feed">
+        <input type="hidden" id="feed-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Nom de l'aliment *</label>
+            <input type="text" id="feed-name" class="form-control" placeholder="Ex: Granulés Pondeuses Bio, Foin de Crau..." required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Catégorie d'aliment *</label>
+              <select id="feed-category" class="form-control">
+                <option value="demarrage">Démarrage (jeunes)</option>
+                <option value="croissance">Croissance</option>
+                <option value="ponte">Ponte</option>
+                <option value="engraissement">Engraissement / Finition</option>
+                <option value="fourrage">Fourrage / Foin</option>
+                <option value="concentre">Concentré protéique</option>
+                <option value="mineraux">Minéraux & Vitamines</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Unité de mesure *</label>
+              <select id="feed-unit" class="form-control">
+                <option value="kg">kg (Kilogrammes)</option>
+                <option value="sac">Sac de 25/50kg</option>
+                <option value="botte">Botte / Balle</option>
+                <option value="tonne">Tonne</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Espèce ciblée</label>
+              <select id="feed-species-select" class="form-control"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catégorie animale ciblée</label>
+              <input type="text" id="feed-target-cat" class="form-control" placeholder="Ex: Poules pondeuses, Chevreaux...">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Stock initial</label>
+              <input type="number" id="feed-stock" class="form-control" step="0.1" value="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Seuil d'alerte de stock bas *</label>
+              <input type="number" id="feed-threshold" class="form-control" step="0.1" value="10" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Prix unitaire habituel</label>
+              <input type="number" id="feed-price" class="form-control" step="0.01" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fournisseur</label>
+              <input type="text" id="feed-supplier" class="form-control" placeholder="Ex: Moulin Régional">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes & Composition</label>
+            <textarea id="feed-notes" class="form-control" rows="2" placeholder="Taux de protéines, marque..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer l'aliment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : ACHAT OU DISTRIBUTION D'ALIMENT -->
+  <div class="modal-backdrop" id="modal-feed-log">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">🌾 Mouvement d'Aliment (Achat / Distribution)</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-feed-log">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Type d'opération *</label>
+              <select id="feed-log-type" class="form-control">
+                <option value="distribution">🍽️ Distribution aux animaux (Sortie)</option>
+                <option value="achat">🛒 Approvisionnement / Achat (Entrée)</option>
+                <option value="perte">⚠️ Perte / Périmé (Sortie)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date *</label>
+              <input type="date" id="feed-log-date" class="form-control" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Aliment concerné *</label>
+            <select id="feed-log-feed-select" class="form-control" required></select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Quantité *</label>
+              <input type="number" id="feed-log-qty" class="form-control" step="0.1" required style="font-size:16px; font-weight:700;">
+            </div>
+            <div class="form-group" id="feed-log-group-lot">
+              <label class="form-label">Lot / Bâtiment destinataire</label>
+              <select id="feed-log-lot-select" class="form-control"></select>
+            </div>
+          </div>
+          <div class="form-row" id="feed-log-group-price" style="display:none;">
+            <div class="form-group">
+              <label class="form-label">Prix unitaire</label>
+              <input type="number" id="feed-log-unit-price" class="form-control" step="0.01">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Coût total</label>
+              <input type="number" id="feed-log-total-cost" class="form-control" step="0.1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes</label>
+            <input type="text" id="feed-log-notes" class="form-control" placeholder="Ration journalière, observations...">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Valider le mouvement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : ENTRETIEN BÂTIMENT -->
+  <div class="modal-backdrop" id="modal-building-maintenance">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">🛖 Enregistrer un Entretien d'Installation</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-building-maintenance">
+        <input type="hidden" id="maint-lot-id">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date des travaux *</label>
+              <input type="date" id="maint-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Type d'entretien *</label>
+              <select id="maint-type" class="form-control">
+                <option value="nettoyage">Nettoyage complet</option>
+                <option value="desinfection">Désinfection & Chaulage</option>
+                <option value="changement_litiere">Changement de litière</option>
+                <option value="vide_sanitaire">Mise en vide sanitaire</option>
+                <option value="reparation">Réparation / Clôture</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description détaillée des travaux *</label>
+            <input type="text" id="maint-desc" class="form-control" placeholder="Ex: Lavage haute pression et pulvérisation virucide" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Coût financier (matériel, produits)</label>
+              <input type="number" id="maint-cost" class="form-control" step="0.1" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Intervenant / Réalisé par</label>
+              <input type="text" id="maint-performed-by" class="form-control" placeholder="Ex: Équipe ferme, technicien...">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date du prochain entretien prévu</label>
+            <input type="date" id="maint-next-date" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer les travaux</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : CRÉER UN CONTACT (CLIENT / FOURNISSEUR) -->
+  <div class="modal-backdrop" id="modal-contact">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">💼 Nouveau Contact Commercial</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-contact">
+        <input type="hidden" id="contact-id">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Type de contact *</label>
+              <select id="contact-type" class="form-control">
+                <option value="client">Client (Acheteur)</option>
+                <option value="fournisseur">Fournisseur</option>
+                <option value="mixte">Client & Fournisseur</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nom ou Raison Sociale *</label>
+              <input type="text" id="contact-name" class="form-control" placeholder="Ex: Épicerie du Centre, Coopérative..." required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Téléphone</label>
+              <input type="text" id="contact-phone" class="form-control" placeholder="+225 ...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">E-mail</label>
+              <input type="email" id="contact-email" class="form-control" placeholder="contact@domaine.com">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Adresse / Localisation</label>
+            <input type="text" id="contact-address" class="form-control" placeholder="Ville, marché...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes & Conditions</label>
+            <textarea id="contact-notes" class="form-control" rows="2" placeholder="Délais de paiement, produits habituels..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer le contact</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE : ENREGISTRER UN REVENU (COMPTABILITÉ DE GESTION LOCALE) -->
+  <div class="modal-backdrop" id="modal-revenue">
+    <div class="modal-content" style="max-width:550px;">
+      <div class="modal-header">
+        <h3 class="modal-title">💰 Enregistrer un Revenu</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-revenue">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Type de revenu *</label>
+              <select id="revenue-type" class="form-control" required>
+                <option value="recette">📈 Recette d'exploitation</option>
+                <option value="exceptionnel">⭐ Revenu exceptionnel / Autre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catégorie *</label>
+              <select id="revenue-category" class="form-control" required>
+                <option value="vente_animaux">Vente d'animaux</option>
+                <option value="vente_oeufs">Vente d'œufs</option>
+                <option value="vente_lait">Vente de lait</option>
+                <option value="autre_produit">Vente d'autres produits</option>
+                <option value="autre_revenu">Autre revenu</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description détaillée *</label>
+            <input type="text" id="revenue-description" class="form-control" placeholder="Ex: Vente de 15 poules pondeuses, 20 plateaux d'œufs..." required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" id="label-revenue-amount">Montant *</label>
+              <input type="number" id="revenue-amount" class="form-control" step="0.1" placeholder="Ex: 45000" required style="font-size:15px; font-weight:700;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Devise</label>
+              <input type="text" id="revenue-currency" class="form-control" readonly style="background:#f8fafc; font-weight:600;" value="FCFA">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date de l'opération *</label>
+              <input type="date" id="revenue-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nom du client (facultatif)</label>
+              <input type="text" id="revenue-client" class="form-control" placeholder="Ex: Mme Lawson, Restaurant Le Fermier...">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Espèce concernée (si applicable)</label>
+              <select id="revenue-species-select" class="form-control">
+                <option value="">Ferme globale</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lot concerné (si applicable)</label>
+              <select id="revenue-lot-select" class="form-control">
+                <option value="">Aucun lot spécifique</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mode d'encaissement</label>
+            <select id="revenue-payment-method" class="form-control">
+              <option value="Espèces">Espèces</option>
+              <option value="T-Money">T-Money</option>
+              <option value="Flooz">Flooz</option>
+              <option value="Wave">Wave</option>
+              <option value="Orange Money">Orange Money</option>
+              <option value="Virement bancaire">Virement bancaire</option>
+              <option value="Chèque">Chèque</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Observations / Notes (facultatif)</label>
+            <textarea id="revenue-notes" class="form-control" rows="2" placeholder="Ex: Règlement au comptant, facture délivrée..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn" style="background:#16a34a; color:#fff; font-weight:600; padding:10px 20px; border-radius:var(--radius-md); border:none; cursor:pointer;">Valider & Enregistrer le Revenu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE : ENREGISTRER UNE DÉPENSE (CONFORME CAPTURE D'ÉCRAN) -->
+  <div class="modal-backdrop" id="modal-expense">
+    <div class="modal-content" style="max-width:550px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Enregistrer une Dépense</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-expense">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date *</label>
+              <input type="date" id="expense-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catégorie *</label>
+              <select id="expense-category" class="form-control" required>
+                <option value="Aliments">Aliments</option>
+                <option value="Achat canetons">Achat canetons</option>
+                <option value="Achat poussins">Achat poussins</option>
+                <option value="Achat d'animaux">Achat d'animaux</option>
+                <option value="Vaccins & Médicaments">Vaccins & Médicaments</option>
+                <option value="Main-d'œuvre">Main-d'œuvre</option>
+                <option value="Matériel & Équipements">Matériel & Équipements</option>
+                <option value="Transport & Carburant">Transport & Carburant</option>
+                <option value="Énergie & Eau">Énergie & Eau</option>
+                <option value="Autre dépense">Autre dépense</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" id="label-expense-amount">Montant (FCFA) *</label>
+              <input type="number" id="expense-amount" class="form-control" step="0.1" placeholder="Ex: 25000" required style="font-size:15px; font-weight:700;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lot concerné</label>
+              <select id="expense-lot-select" class="form-control">
+                <option value="">Général Ferme</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description détaillée</label>
+            <input type="text" id="expense-description" class="form-control" placeholder="Ex: 5 sacs de maïs dépoussiéré" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Fournisseur</label>
+              <input type="text" id="expense-supplier" class="form-control" placeholder="Ex: AgroFeed Togo">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mode de règlement</label>
+              <select id="expense-payment-method" class="form-control">
+                <option value="Espèces">Espèces</option>
+                <option value="T-Money">T-Money</option>
+                <option value="Flooz">Flooz</option>
+                <option value="Wave">Wave</option>
+                <option value="Orange Money">Orange Money</option>
+                <option value="Virement bancaire">Virement bancaire</option>
+                <option value="Chèque">Chèque</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn" style="background:#16a34a; color:#fff; font-weight:600; padding:10px 20px; border-radius:var(--radius-md); border:none; cursor:pointer;">Valider & Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : NOUVELLE TRANSACTION COMMERCIALE -->
+  <div class="modal-backdrop" id="modal-transaction">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">💼 Enregistrer une Vente ou un Achat</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-transaction">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Type de transaction *</label>
+              <select id="tx-type" class="form-control" style="font-weight:700;">
+                <option value="vente">💰 Vente (Recette pour la ferme)</option>
+                <option value="achat">🛒 Achat (Dépense pour la ferme)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catégorie de produit *</label>
+              <select id="tx-product-type" class="form-control">
+                <option value="oeufs">🥚 Œufs</option>
+                <option value="animaux">🐾 Animaux sur pied</option>
+                <option value="lait">🥛 Lait</option>
+                <option value="aliment">🌾 Aliments pour animaux</option>
+                <option value="fumier">💩 Fumier / Engrais organique</option>
+                <option value="autre">📦 Autre produit fermier</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Si animaux, sélection fiche -->
+          <div class="form-group" id="tx-group-animal" style="display:none;">
+            <label class="form-label">Animal ou Lot concerné</label>
+            <select id="tx-animal-select" class="form-control"></select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date *</label>
+              <input type="date" id="tx-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client ou Fournisseur</label>
+              <select id="tx-contact-select" class="form-control"></select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description de la vente / achat *</label>
+            <input type="text" id="tx-desc" class="form-control" placeholder="Ex: Vente de 5 plateaux d'œufs extra-frais" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Quantité *</label>
+              <input type="number" id="tx-qty" class="form-control" step="0.1" value="1" required style="font-size:16px; font-weight:700;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Unité</label>
+              <select id="tx-unit" class="form-control">
+                <option value="unite">Unité(s)</option>
+                <option value="plateau_30">Plateau de 30 œufs</option>
+                <option value="carton">Carton</option>
+                <option value="litre">Litre(s)</option>
+                <option value="kg">kg (Kilogrammes)</option>
+                <option value="sac">Sac(s)</option>
+                <option value="tete">Tête(s)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Prix unitaire *</label>
+              <input type="number" id="tx-unit-price" class="form-control" step="0.01" required>
+            </div>
+          </div>
+
+          <div class="form-row" style="background:var(--gray-50); padding:12px; border-radius:var(--radius-md); margin-bottom:14px;">
+            <div class="form-group">
+              <label class="form-label">Montant Total Calculé</label>
+              <input type="number" id="tx-total-amount" class="form-control" step="0.1" readonly style="font-weight:800; background:#fff;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Montant Déjà Encaissé / Payé</label>
+              <input type="number" id="tx-paid-amount" class="form-control" step="0.1">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Mode de règlement</label>
+              <select id="tx-payment-method" class="form-control">
+                <option value="especes">Espèces / Liquide</option>
+                <option value="mobile_money">Mobile Money (Orange, Wave, MTN...)</option>
+                <option value="virement">Virement bancaire</option>
+                <option value="cheque">Chèque</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Statut du paiement</label>
+              <select id="tx-payment-status" class="form-control">
+                <option value="paye">Payé / Réglé intégralement</option>
+                <option value="en_attente">En attente (Crédit)</option>
+                <option value="partiel">Paiement partiel / Acompte</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Valider la transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : NOUVELLE ÉCRITURE FINANCIÈRE DIRECTE -->
+  <div class="modal-backdrop" id="modal-financial-record">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">💰 Enregistrer une Dépense ou Recette</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-financial-record">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Type d'écriture *</label>
+              <select id="fin-type" class="form-control" style="font-weight:700;">
+                <option value="depense">📉 Dépense / Charge</option>
+                <option value="recette">📈 Recette / Produit</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catégorie comptable *</label>
+              <select id="fin-category" class="form-control">
+                <option value="alimentation">Alimentation animale</option>
+                <option value="soins_veto">Soins vétérinaires & médicaments</option>
+                <option value="achat_animaux">Achats de reproducteurs / animaux</option>
+                <option value="main_d_oeuvre">Main-d'œuvre & Salaires</option>
+                <option value="materiel">Matériel & Équipements</option>
+                <option value="transport">Transport & Carburant</option>
+                <option value="energie">Énergie, Eau & Électricité</option>
+                <option value="vente_oeufs">Vente d'œufs</option>
+                <option value="vente_animaux">Vente d'animaux</option>
+                <option value="autre_charge">Autre charge d'exploitation</option>
+                <option value="autre_produit">Autre recette</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date *</label>
+              <input type="date" id="fin-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Montant *</label>
+              <input type="number" id="fin-amount" class="form-control" step="0.1" required style="font-size:16px; font-weight:700;">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Intitulé / Libellé *</label>
+            <input type="text" id="fin-title" class="form-control" placeholder="Ex: Salaire ouvrier, Facture électricité poussinière..." required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Espèce imputable (optionnel)</label>
+              <select id="fin-species-select" class="form-control"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lot imputable (optionnel)</label>
+              <select id="fin-lot-select" class="form-control"></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Statut du paiement</label>
+            <select id="fin-status" class="form-control">
+              <option value="paye">Payé / Décaissé</option>
+              <option value="en_attente">En attente de règlement</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer l'écriture</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE V2 : CENTRE DE NOTIFICATIONS & ALERTES -->
+  <div class="modal-backdrop" id="modal-notifications">
+    <div class="modal-content" style="max-width:820px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">🔔 Alertes & Rappels de la Ferme</h3>
+          <p id="modal-alerts-farm-subtitle" style="margin:2px 0 0 0; font-size:12.5px; color:var(--gray-500);">Exploitation active</p>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button class="btn btn-primary btn-sm" onclick="openCreateCustomAlertModal();" style="font-weight:700;">🔔 + Nouvelle alerte</button>
+          <button class="btn btn-secondary btn-sm" id="btn-modal-open-alerts-view" onclick="closeModal('modal-notifications'); State.setView('alerts');" title="Ouvrir la page complète">
+            🖥️ Plein écran
+          </button>
+          <button class="btn-close-modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body" style="padding:16px 20px; display:flex; flex-direction:column; gap:14px;">
+        <!-- Barre de filtres rapides -->
+        <div class="alert-filter-bar" id="modal-alert-filter-bar">
+          <button class="alert-filter-btn active" data-filter="all">Toutes <span class="badge badge-gray" id="mf-badge-all">0</span></button>
+          <button class="alert-filter-btn" data-filter="planned">🗓️ Activités programmées <span class="badge badge-purple" id="mf-badge-planned">0</span></button>
+          <button class="alert-filter-btn" data-filter="growth">🐣 Croissance & Sexage <span class="badge badge-blue" id="mf-badge-growth">0</span></button>
+          <button class="alert-filter-btn" data-filter="custom">🔔 Personnalisées <span class="badge badge-purple" id="mf-badge-custom">0</span></button>
+          <button class="alert-filter-btn" data-filter="urgent">⚠️ À traiter & En retard <span class="badge badge-red" id="mf-badge-urgent">0</span></button>
+          <button class="alert-filter-btn" data-filter="upcoming">⏳ À venir <span class="badge badge-amber" id="mf-badge-upcoming">0</span></button>
+          <button class="alert-filter-btn" data-filter="traite">✅ Traitées <span class="badge badge-green" id="mf-badge-traite">0</span></button>
+        </div>
+
+        <div id="notifications-list" style="display:flex; flex-direction:column; gap:12px; max-height:65vh; overflow-y:auto; padding-right:4px;">
+          <p>Chargement des alertes...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : SEXAGE & TRANSFERT DES VOLAILLES (POUSSINS: 8 SEMAINES, CANETONS: 12 SEMAINES) -->
+  <div class="modal-backdrop" id="modal-duckling-sexing">
+    <div class="modal-content" style="max-width:620px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="duckling-sexing-title">🦆 Sexage & Transfert des Canetons (12 semaines)</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-duckling-sexing">
+        <div class="modal-body">
+          <input type="hidden" id="duckling-sex-animal-id">
+          <input type="hidden" id="duckling-sex-expected-total">
+          <input type="hidden" id="duckling-sex-species-id" value="canards">
+
+          <!-- En-tête informatif du lot -->
+          <div style="background:var(--gray-50); border:1px solid var(--gray-200); border-radius:var(--radius-md); padding:14px; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+              <div>
+                <h4 id="duckling-sex-lot-name" style="margin:0 0 4px 0; font-size:16px; font-weight:700; color:var(--gray-900);">Lot</h4>
+                <div style="font-size:12.5px; color:var(--gray-600);">
+                  🐣 Né le : <strong id="duckling-sex-birth-date">-</strong> &nbsp;|&nbsp; 
+                  ⏳ Âge : <strong id="duckling-sex-age">-</strong>
+                </div>
+              </div>
+              <div id="duckling-sex-status-badge"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--gray-300); pt:8px; margin-top:8px; font-size:13px;">
+              <div><span id="duckling-sex-maturity-prefix">⏰ Échéance 12 semaines (84 j) : </span><strong id="duckling-sex-maturity-date">-</strong></div>
+              <div>Effectif vivant à ventiler : <span class="badge badge-blue" id="duckling-sex-current-qty" style="font-size:13px; font-weight:800;">0</span></div>
+            </div>
+          </div>
+
+          <!-- Date de l'opération -->
+          <div class="form-group">
+            <label class="form-label">Date du sexage / transfert *</label>
+            <input type="date" id="duckling-sex-date" class="form-control" required>
+          </div>
+
+          <!-- Saisie des effectifs ventilés -->
+          <div style="background:var(--gray-50); padding:14px; border-radius:var(--radius-md); margin-bottom:14px; border:1px solid var(--gray-200);">
+            <label class="form-label" style="margin-bottom:8px; font-weight:700;">Ventilation des effectifs identifiés *</label>
+            <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" id="duckling-sex-males-label" style="font-size:12px; color:var(--gray-700);">🦆 Canards Mâles</label>
+                <input type="number" id="duckling-sex-males" class="form-control duckling-sex-input" min="0" value="0" required style="font-weight:700; text-align:center;">
+                <span id="duckling-sex-males-sub" style="font-size:10.5px; color:var(--gray-500); display:block; margin-top:2px;">Transférés en mâles</span>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" id="duckling-sex-females-label" style="font-size:12px; color:var(--gray-700);">🦆 Canes (Femelles)</label>
+                <input type="number" id="duckling-sex-females" class="form-control duckling-sex-input" min="0" value="0" required style="font-weight:700; text-align:center;">
+                <span id="duckling-sex-females-sub" style="font-size:10.5px; color:var(--gray-500); display:block; margin-top:2px;">Transférées en canes</span>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" id="duckling-sex-unknown-label" style="font-size:12px; color:var(--gray-700);">❓ Non identifiés</label>
+                <input type="number" id="duckling-sex-unknown" class="form-control duckling-sex-input" min="0" value="0" required style="font-weight:700; text-align:center;">
+                <span id="duckling-sex-unknown-sub" style="font-size:10.5px; color:var(--gray-500); display:block; margin-top:2px;">Restent en canetons</span>
+              </div>
+            </div>
+
+            <!-- Équation de contrôle en temps réel -->
+            <div id="duckling-sex-equation-box" style="margin-top:14px; padding:10px 12px; border-radius:var(--radius-sm); font-size:12.5px; background:white; border:1px solid var(--gray-200);">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>Équation de contrôle : <strong id="duckling-sex-equation-sum">0</strong> / <span id="duckling-sex-equation-target">0</span></div>
+                <div id="duckling-sex-equation-status" style="font-weight:700;"></div>
+              </div>
+              <div id="duckling-sex-equation-detail" style="font-size:11.5px; margin-top:3px; color:var(--gray-500);"></div>
+            </div>
+          </div>
+
+          <!-- Bâtiment de destination optionnel -->
+          <div class="form-group">
+            <label class="form-label">Bâtiment / Enclos de destination pour les adultes</label>
+            <select id="duckling-sex-building-select" class="form-control">
+              <option value="">Conserver l'installation d'origine</option>
+            </select>
+          </div>
+
+          <!-- Notes -->
+          <div class="form-group">
+            <label class="form-label">Observations & Remarques</label>
+            <textarea id="duckling-sex-notes" class="form-control" rows="2" placeholder="Critères de sexage (crête, voix, plumage, cloaque), état sanitaire..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" id="btn-submit-duckling-sexing" class="btn btn-primary">Valider le sexage & le transfert</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE : CRÉATION D'UN LOT DE POUSSINS OU CANETONS -->
+  <div class="modal-backdrop" id="modal-duckling-lot">
+    <div class="modal-content" style="max-width:540px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="duckling-lot-modal-title">🐥 Enregistrer un Nouveau Lot de Poussins</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-duckling-lot">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Espèce de volaille *</label>
+            <select id="duckling-lot-species-select" class="form-control" style="font-weight:600;">
+              <option value="poules" selected>🐥 Poussins (Poules et coqs — alerte à 8 semaines / 56 jours)</option>
+              <option value="canards">🦆 Canetons (Canards — alerte à 12 semaines / 84 jours)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nom ou Numéro du Lot *</label>
+            <input type="text" id="duckling-lot-name" class="form-control" placeholder="ex: Lot Poussins Éclosion Mars 2026" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" id="duckling-lot-birth-label">Date de naissance des poussins *</label>
+            <input type="date" id="duckling-lot-birth-date" class="form-control" required>
+          </div>
+
+          <!-- Calculateur automatique 56 jours (8 sem) ou 84 jours (12 sem) -->
+          <div id="duckling-lot-maturity-box" style="padding:10px 14px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:var(--radius-md); margin-bottom:14px; color:#166534; font-size:13px;">
+            <div style="font-weight:700; display:flex; align-items:center; gap:6px;">
+              <span>⏰</span> <span id="duckling-lot-maturity-title">Date d'alerte des 8 semaines (56 jours) :</span>
+            </div>
+            <div style="font-size:14px; font-weight:800; margin-top:4px;" id="duckling-lot-maturity-preview">
+              Saisissez une date de naissance pour calculer l'alerte
+            </div>
+            <div style="font-size:11.5px; color:#15803d; margin-top:2px;" id="duckling-lot-maturity-formula">
+              Formule automatique : Date de naissance + 56 jours. L'alerte sera déclenchée à cette date exacte.
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" id="duckling-lot-quantity-label">Nombre initial de poussins *</label>
+              <input type="number" id="duckling-lot-quantity" class="form-control" min="1" value="50" required style="font-weight:700;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Race ou Souche</label>
+              <input type="text" id="duckling-lot-breed" class="form-control" placeholder="ex: Goliath, Sasso, Cou nu...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Installation / Bâtiment d'élevage</label>
+            <select id="duckling-lot-building-select" class="form-control">
+              <option value="">Aucun bâtiment assigné</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Observations initiales</label>
+            <textarea id="duckling-lot-notes" class="form-control" rows="2" placeholder="Fournisseur, couvoir, vaccination de démarrage..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer le lot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE : CRÉATION & MODIFICATION D'UNE ALERTE PERSONNALISÉE -->
+  <div class="modal-backdrop" id="modal-custom-alert">
+    <div class="modal-content" style="max-width:720px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="custom-alert-modal-title">🔔 Nouvelle Alerte / Rappel</h3>
+          <p style="margin:2px 0 0 0; font-size:12.5px; color:var(--gray-500);">Programmez une alerte sur mesure pour votre exploitation</p>
+        </div>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-custom-alert">
+        <div class="modal-body">
+          <input type="hidden" id="custom-alert-id">
+
+          <!-- 1. Catégorie & Type d'activité prédéfini -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Catégorie d'alerte *</label>
+              <select id="custom-alert-category" class="form-control" required onchange="onCustomAlertCategoryChange();">
+                <option value="alimentation">🌾 Alimentation & Eau</option>
+                <option value="incubation">🥚 Incubation & Éclosion</option>
+                <option value="sante">🩺 Santé & Soins Vétérinaires</option>
+                <option value="reproduction">🍼 Reproduction & Gestation</option>
+                <option value="entretien">🧹 Bâtiments & Entretien</option>
+                <option value="commercial">💰 Commercial & Ventes</option>
+                <option value="autre">🔔 Autre / Tâche générale</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Activité suggérée / Type d'action</label>
+              <select id="custom-alert-activity-preset" class="form-control" onchange="onCustomAlertPresetChange();">
+                <!-- Dynamiquement rempli selon la catégorie -->
+              </select>
+            </div>
+          </div>
+
+          <!-- 2. Titre de l'alerte -->
+          <div class="form-group">
+            <label class="form-label">Titre ou description courte du rappel *</label>
+            <input type="text" id="custom-alert-title" class="form-control" placeholder="Ex: Distribution du matin, Mirage des œufs à J+7..." required>
+          </div>
+
+          <!-- 3. Portée / Association (Ferme, Espèce, Bâtiment, Lot) -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Portée / Cible du rappel *</label>
+              <select id="custom-alert-scope-type" class="form-control" onchange="onCustomAlertScopeChange();">
+                <option value="ferme">🏡 Toute l'exploitation</option>
+                <option value="espece">🐾 Espèce animale spécifique</option>
+                <option value="batiment">🛖 Bâtiment / Installation</option>
+                <option value="lot">🏷️ Lot d'animaux spécifique</option>
+              </select>
+            </div>
+            <div class="form-group" id="group-custom-alert-species" style="display:none;">
+              <label class="form-label">Espèce concernée</label>
+              <select id="custom-alert-species-id" class="form-control" onchange="onCustomAlertSpeciesChange();">
+                <!-- Rempli avec les espèces actives de la ferme -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" id="group-custom-alert-building" style="display:none;">
+              <label class="form-label">Bâtiment / Installation</label>
+              <select id="custom-alert-building-id" class="form-control">
+                <!-- Rempli avec les bâtiments de la ferme -->
+              </select>
+            </div>
+            <div class="form-group" id="group-custom-alert-lot" style="display:none;">
+              <label class="form-label">Lot d'animaux</label>
+              <select id="custom-alert-lot-id" class="form-control">
+                <!-- Rempli avec les lots de la ferme -->
+              </select>
+            </div>
+          </div>
+
+          <!-- 4. Champ spécifique Alimentation (visible si category === 'alimentation') -->
+          <div id="group-custom-alert-feed" class="form-group" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:12px; margin-bottom:14px;">
+            <label class="form-label" style="color:#166534; font-weight:700;">🌾 Spécificités Alimentation (Optionnel)</label>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:12px;">Type d'aliment / Ration / Eau</label>
+              <input type="text" id="custom-alert-feed-type" class="form-control" placeholder="Ex: Aliment démarrage poussins, Granulés ponte, Maïs concassé, Ravitaillement eau fraîche...">
+            </div>
+          </div>
+
+          <!-- 5. Date, Heure, Fréquence et Priorité -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date prévue / Échéance *</label>
+              <input type="date" id="custom-alert-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Heure programmée (optionnel)</label>
+              <input type="time" id="custom-alert-time" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Fréquence / Récurrence *</label>
+              <select id="custom-alert-frequency" class="form-control">
+                <option value="une_fois">Une seule fois (Ponctuel)</option>
+                <option value="quotidien">Quotidien (Tous les jours)</option>
+                <option value="hebdomadaire">Hebdomadaire (Toutes les semaines)</option>
+                <option value="mensuel">Mensuel (Tous les mois)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Niveau de priorité *</label>
+              <select id="custom-alert-priority" class="form-control">
+                <option value="normale">🟢 Normale</option>
+                <option value="moyenne">🟠 Moyenne</option>
+                <option value="haute">🔴 Haute (Urgente)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 6. Observations / Notes -->
+          <div class="form-group">
+            <label class="form-label">Observations / Consignes détaillées</label>
+            <textarea id="custom-alert-notes" class="form-control" rows="2" placeholder="Détails, dosage, consignes pour le personnel, etc."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Annuler</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit-custom-alert">Enregistrer l'alerte</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE : CONFIGURATION & SYNCHRONISATION SUPABASE -->
+  <div class="modal-backdrop" id="modal-supabase-config">
+    <div class="modal-content" style="max-width:580px;">
+      <div class="modal-header">
+        <h3 class="modal-title">⚡ Connexion Base de Données Supabase</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="supabase-status-banner" style="padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:13px; display:flex; align-items:center; gap:10px; background:#f8fafc; border:1px solid #e2e8f0;">
+          <span style="font-size:18px;">ℹ️</span>
+          <div>
+            <div style="font-weight:600;" id="supabase-banner-title">Statut Supabase : Vérification...</div>
+            <div style="color:var(--gray-600); font-size:12px;" id="supabase-banner-desc">Chargement des paramètres de connexion.</div>
+          </div>
+        </div>
+
+        <p style="font-size:13px; color:var(--gray-600); line-height:1.5; margin-bottom:14px;">
+          Toutes les données de votre ferme (utilisateurs, fermes, lots, animaux, bâtiments, alertes, finances, incubations) sont centralisées et sécurisées avec PostgreSQL et Supabase Auth.
+        </p>
+
+        <form id="form-supabase-config">
+          <div class="form-group">
+            <label class="form-label">URL du projet Supabase (SUPABASE_URL)</label>
+            <input type="url" id="cfg-supabase-url" class="form-control" placeholder="https://votre-projet.supabase.co" autocomplete="off">
+            <small style="color:var(--gray-500); font-size:11px;">Configurez aussi dans le fichier <code>.env</code> du serveur.</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Clé publique anonyme (SUPABASE_ANON_KEY)</label>
+            <input type="text" id="cfg-supabase-anon-key" class="form-control" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." autocomplete="off">
+            <small style="color:var(--gray-500); font-size:11px;">Clé publique (anon/public key). Ne renseignez <strong>JAMAIS</strong> la clé <code>service_role</code>.</small>
+          </div>
+
+          <div style="display:flex; gap:10px; margin-top:14px; margin-bottom:18px; flex-wrap:wrap;">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-test-supabase">🔌 Tester la connexion</button>
+            <button type="submit" class="btn btn-primary btn-sm">💾 Enregistrer les clés</button>
+            <button type="button" class="btn btn-outline btn-sm" id="btn-clear-supabase" style="margin-left:auto; color:var(--red-600);">Réinitialiser</button>
+          </div>
+        </form>
+
+        <hr style="border:none; border-top:1px solid var(--gray-200); margin:18px 0;">
+
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:14px;">
+          <h4 style="margin:0 0 6px 0; font-size:13.5px; color:#166534; display:flex; align-items:center; gap:6px;">
+            🔄 Migration & Synchronisation des données
+          </h4>
+          <p style="font-size:12px; color:#15803d; margin:0 0 10px 0; line-height:1.4;">
+            Transférez en 1 clic l'intégralité des données locales actuelles (lots, animaux, bâtiments, alertes, finances, incubations) vers votre base Supabase centralisée.
+          </p>
+          <button type="button" class="btn btn-sm" id="btn-sync-to-supabase" style="background:#16a34a; color:#fff; border:none; padding:8px 14px; font-weight:600; border-radius:6px; cursor:pointer;">
+            🚀 Migrer les données locales vers Supabase
+          </button>
+          <div id="supabase-sync-result" style="margin-top:8px; font-size:12px; font-weight:500;"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-close-modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENEUR DES TOASTS -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- SUPABASE SDK & SERVICE LAYER -->
+  <script src="vendor/supabase/supabase.js"></script>
+  <script src="js/supabase-client.js?v=2.4.0"></script>
+  <script src="js/supabase-service.js?v=2.4.0"></script>
+
+  <!-- SCRIPTS APPLICATION -->
+  <script src="js/api.js?v=2.4.0"></script>
+  <script src="js/state.js?v=2.4.0"></script>
+  <script src="js/app.js?v=2.4.0"></script>
+  <script src="js/v2-views.js?v=2.4.0"></script>
+
+  <script>
+    // Initialiser la date du jour par défaut dans les formulaires de mouvement
+    document.addEventListener('DOMContentLoaded', () => {
+      const today = new Date().toISOString().split('T')[0];
+      const movDate = document.getElementById('mov-date-input');
+      if (movDate) movDate.value = today;
+    });
+  </script>
+</body>
+</html>

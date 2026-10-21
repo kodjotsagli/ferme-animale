@@ -1,0 +1,35 @@
+# ==============================================================================
+# AGRO-FERME — FICHIERS ET DOSSIERS IGNORÉS POUR GIT
+# ==============================================================================
+
+# Variables d'environnement & secrets (CRITIQUE pour la sécurité)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Dépendances Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Fichiers de cache et temporaires
+.cache/
+tmp/
+temp/
+*.tmp
+
+# Fichiers système et éditeurs
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs d'exécution
+logs/
+*.log
