@@ -720,8 +720,8 @@ async function renderAlertsView() {
           <button class="alert-filter-btn" data-vfilter="upcoming">⏳ À venir <span class="badge badge-amber" id="vf-badge-upcoming">0</span></button>
           <button class="alert-filter-btn" data-vfilter="traite">✅ Traitées <span class="badge badge-green" id="vf-badge-traite">0</span></button>
         </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <input type="text" id="view-alert-search" class="form-control" placeholder="Rechercher par lot, espèce, bâtiment, aliment, soin..." style="width:250px; font-size:12.5px; padding:6px 12px;">
+        <div class="view-alert-search-box" style="display:flex; align-items:center; gap:8px;">
+          <input type="text" id="view-alert-search" class="form-control view-alert-search-input" placeholder="Rechercher par lot, espèce, bâtiment, aliment, soin..." style="font-size:12.5px; padding:6px 12px;">
         </div>
       </div>
 
@@ -3300,7 +3300,7 @@ async function renderFinanceView() {
     </div>
 
     <!-- REVENUS ET DÉPENSES PAR CATÉGORIE -->
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap:22px; margin-bottom:24px;">
+    <div class="finance-cat-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:18px; margin-bottom:24px;">
       <!-- REVENUS PAR CATÉGORIE -->
       <div class="card" style="border-radius:12px; border:1px solid #e2e8f0; overflow:hidden;">
         <div class="card-header" style="background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">

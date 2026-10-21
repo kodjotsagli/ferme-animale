@@ -1288,7 +1288,7 @@ async function renderFarmView() {
       </button>
     </div>
 
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:24px;">
+    <div class="farm-view-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:20px;">
       <!-- CARTE PARAMÈTRES FERME ACTIVE -->
       <div class="card">
         <div class="card-header">
@@ -1829,7 +1829,7 @@ async function renderLotsView() {
       <button class="btn btn-primary" id="btn-create-lot">➕ Nouveau lot ou bâtiment</button>
     </div>
 
-    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap:20px;" id="lots-container">
+    <div class="lots-cards-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap:20px;" id="lots-container">
       <p>Chargement des lots...</p>
     </div>
   `;
@@ -2310,7 +2310,7 @@ async function renderSettingsView() {
       </div>
     </div>
 
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap:24px;">
+    <div class="settings-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:20px;">
       <!-- GESTION DES CATÉGORIES -->
       <div class="card">
         <div class="card-header">
