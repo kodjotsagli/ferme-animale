@@ -94,6 +94,9 @@ function formatUserErrorMessage(rawMessage) {
   if (str.includes('JWT expired') || str.includes('token is expired')) {
     return 'Votre session a expiré. Veuillez vous reconnecter.';
   }
+  if (str.includes('schema cache') || str.includes('Could not find the table')) {
+    return 'La table de base de données est introuvable. Veuillez exécuter le script supabase/schema.sql dans l\'éditeur SQL de votre projet Supabase.';
+  }
   if (str.includes('email rate limit exceeded')) {
     return 'Trop de tentatives en peu de temps. Veuillez patienter un instant ou contacter l\'administrateur.';
   }
